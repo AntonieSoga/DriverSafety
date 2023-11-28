@@ -1,7 +1,7 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, jsonify
 from flask_sqlalchemy import SQLAlchemy
 import random
-
+from flask import request
 
 app = Flask(__name__)
 app.config.from_pyfile('config.py')
@@ -53,12 +53,11 @@ try:
 
     @app.route('/')
     def index():
-        # Use the extract_questions function to get a set of questions
-        selected_questions = extract_questions()
+        # Use the extract_questions function to get a set of questions and points
+        selected_questions, total_points = extract_questions()
 
-        # Pass the selected_questions variable to the index.html template
-        return render_template('index.html', qtable_entries=Qtable.query.all(), selected_questions=selected_questions)
-
+        # Pass the selected_questions and total_points variables to the index.html template
+        return render_template('index.html', selected_questions=selected_questions, total_points=total_points)
 
     if __name__ == '__main__':
         app.run(debug=True)

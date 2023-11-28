@@ -44,7 +44,8 @@
         </div>
 
         <div id="warnings">
-            <div id="warning-text">
+            <div id="warning-text" style="color: #185a9d">
+                <h1>By proceeding with our application, you acknowledge and consent to the processing of your data for the purpose of ongoing enhancement and improvement.</h1>
                 <button id="warning-button">OK I understand!</button>
             </div>
         </div>
@@ -58,10 +59,9 @@
     <div class="center-div">
         <h1 class="center-text" style="text-align: center">Tiredness Detector</h1>
         <div id="questionContainer">
-            {% for entry in qtable_entries %}
-                <h3 class="center-down" id="question{{ loop.index }}"
-                        {% if loop.index > 0 %} style="display: none" {% endif %}>
-                    {{ entry.intrebare }}
+            {% for question in selected_questions %}
+        <h3 class="center-down" id="question{{ loop.index }}" data-punctajq="{{ question.punctajq }}"                        {% if loop.index > 1 %} style="display: none" {% endif %}>
+                    {{ question.intrebare }}
                 </h3>
             {% endfor %}
         </div>
@@ -81,6 +81,8 @@
 </div>
 
 <div class="modal" id="alertModal">
+    <button class="button" onclick="showAlert('Sigur DA?', 'DA')">DA</button>
+
     <div class="modal-content">
         <span class="close" onclick="closeModal()">&times;</span>
         <p id="modal-text">Ești sigur că vrei să faci această acțiune?</p>
@@ -110,20 +112,37 @@
         });
 
     let currentQuestion = 1;
+    let sum = 0;
 
     function showAlert(message, answer) {
-        // Show your alert modal here
-
         // Update the current question based on the user's answer
         if (answer === 'DA') {
+            console.log("da?")
+            sum += Number(document.getElementById(`question${currentQuestion}`).getAttribute('data-punctajq'));
+            console.log(sum)
             currentQuestion++;
-        }
-        if (answer === 'NU') {
+        } else if (answer === 'NU') {
             currentQuestion++;
         }
 
         // Display the next question
         showNextQuestion();
+
+        // Check if all questions are answered
+        if (currentQuestion > {{ selected_questions|length }}) {
+            handleFinalAlert();
+        }
+    }
+
+    function handleFinalAlert() {
+        // Check the sum for alerts after all questions are answered
+        if (sum < 5) {
+            alert("You seem rested enough to drive.");
+        } else if (sum >= 5 && sum <= 7) {
+            alert("You could use some rest.");
+        } else {
+            alert("You are too tired, rest for some time.");
+        }
     }
 
     let isFirstQuestionDisplayed = false;
