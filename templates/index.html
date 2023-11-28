@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="static/style.css"> <!-- Link to the CSS file -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+    <!-- Bootstrap CSS for camera.html -->
+    <link rel="stylesheet" href="static/src/css/style.css"> <!-- Link to the CSS file from the second HTML -->
+    <link rel="shortcut icon" href="static/src/css/favicon.ico" type="image/icon"/>
+    <link rel="icon" href="static/src/css/favicon.ico" type="image/icon"/>
+    <style>
+        .display-cover {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+
+        #roadVideo {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        #webcam {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Add any additional styles you need */
+    </style>
+</head>
+<body>
+
+<div class="content-container">
+    <div class="left-div">
+        <div id="full-page-loader">
+            <div class="lds-ellipsis">
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
+        </div>
+
+        <div id="warnings">
+            <div id="warning-text">
+                <button id="warning-button">OK I understand!</button>
+            </div>
+        </div>
+
+        <!-- Detection Canvas -->
+        <canvas id="canvas" class="canvas" style="width: 100%; height: 100%;"></canvas>
+        <!-- Alarm audio -->
+        <!-- <audio src="assets/sounds/alarm.wav" id="alarm" preload="auto"></audio> -->
+    </div>
+
+    <div class="center-div">
+        <h1 class="center-text" style="text-align: center">Tiredness Detector</h1>
+        <div id="questionContainer">
+            {% for entry in qtable_entries %}
+                <h3 class="center-down" id="question{{ loop.index }}" {% if loop.index > 1 %}
+                    style="display: none" {% endif %}>{{ entry.intrebare }}</h3>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="right-div">
+        <video id="roadVideo" autoplay loop muted>
+            <source src="static/road.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+    </div>
+</div>
+
+<div class="buttons-container">
+    <button class="button" onclick="showAlert('Sigur DA?', 'DA')">DA</button>
+    <button class="button button-x" onclick="showAlert('Sigur NU?', 'NU')">NU</button>
+</div>
+
+<div class="modal" id="alertModal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <p id="modal-text">Ești sigur că vrei să faci această acțiune?</p>
+        <button onclick="confirmAction()">Confirmă</button>
+    </div>
+</div>
+
+<script src="https://unpkg.com/feather-icons"></script>
+<script src="static/script.js"></script>
+<script src="static/src/js/jeelizFaceTransfer.js"></script>
+<script src="static/src/js/audio.js"></script>
+<script src="static/src/js/main.js"></script>
+
+<script>
+    // Call the main function from the second HTML file
+    window.onload = function () {
+        main();
+    };
+
+    // Access the user's camera and display the stream in the video element
+    navigator.mediaDevices.getUserMedia({video: true})
+        .then(function (stream) {
+            document.getElementById('webcam').srcObject = stream;
+        })
+        .catch(function (error) {
+            console.error('Error accessing the camera: ', error);
+        });
+
+    let currentQuestion = 1;
+
+    function showAlert(message, answer) {
+        // Show your alert modal here
+
+        // Update the current question based on the user's answer
+        if (answer === 'DA') {
+            currentQuestion++;
+        }
+        if (answer === 'NU') {
+            currentQuestion++;
+        }
+
+        // Display the next question
+        showNextQuestion();
+    }
+
+    function showNextQuestion() {
+        // Hide the current question
+        document.getElementById(`question${currentQuestion - 1}`).style.display = 'none';
+
+        // Display the next question
+        const nextQuestion = document.getElementById(`question${currentQuestion}`);
+        if (nextQuestion) {
+            nextQuestion.style.display = 'block';
+        } else {
+            // All questions displayed, you can handle the end of the questions here
+            console.log('All questions answered');
+        }
+    }
+
+    function closeModal() {
+        // Close your modal here
+    }
+
+    function confirmAction() {
+        // Implement the confirmation action here
+    }
+</script>
+
+</body>
+</html>
