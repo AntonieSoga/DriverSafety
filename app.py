@@ -1,5 +1,7 @@
 from flask import Flask, render_template
 from flask_sqlalchemy import SQLAlchemy
+import random
+
 
 app = Flask(__name__)
 app.config.from_pyfile('config.py')
@@ -26,15 +28,37 @@ class Survey(db.Model):
     idr = db.Column(db.Integer, db.ForeignKey('result.idr'))  # Corrected to lowercase
     obosit = db.Column(db.Boolean)
 
+def extract_questions(target_points=10):
+    selected_questions = []
+    current_points = 0
+    all_questions = Qtable.query.all()
+    shuffled_questions = all_questions.copy()
+    random.shuffle(shuffled_questions)
+
+    for question in shuffled_questions:
+        if current_points + question.punctajq <= target_points:
+            selected_questions.append(question)
+            current_points += question.punctajq
+
+        if current_points == target_points:
+            break
+
+    return selected_questions, current_points
+
 # Create the tables
 try:
     with app.app_context():
         db.create_all()
 
+
     @app.route('/')
     def index():
-        qtable_entries = Qtable.query.all()
-        return render_template('index.html', qtable_entries=qtable_entries)
+        # Use the extract_questions function to get a set of questions
+        selected_questions = extract_questions()
+
+        # Pass the selected_questions variable to the index.html template
+        return render_template('index.html', qtable_entries=Qtable.query.all(), selected_questions=selected_questions)
+
 
     if __name__ == '__main__':
         app.run(debug=True)

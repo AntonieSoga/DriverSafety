@@ -59,8 +59,10 @@
         <h1 class="center-text" style="text-align: center">Tiredness Detector</h1>
         <div id="questionContainer">
             {% for entry in qtable_entries %}
-                <h3 class="center-down" id="question{{ loop.index }}" {% if loop.index > 1 %}
-                    style="display: none" {% endif %}>{{ entry.intrebare }}</h3>
+                <h3 class="center-down" id="question{{ loop.index }}"
+                        {% if loop.index > 0 %} style="display: none" {% endif %}>
+                    {{ entry.intrebare }}
+                </h3>
             {% endfor %}
         </div>
     </div>
@@ -124,6 +126,8 @@
         showNextQuestion();
     }
 
+    let isFirstQuestionDisplayed = false;
+
     function showNextQuestion() {
         // Hide the current question
         document.getElementById(`question${currentQuestion - 1}`).style.display = 'none';
@@ -131,10 +135,17 @@
         // Display the next question
         const nextQuestion = document.getElementById(`question${currentQuestion}`);
         if (nextQuestion) {
-            nextQuestion.style.display = 'block';
+            if (!isFirstQuestionDisplayed) {
+                isFirstQuestionDisplayed = true;
+                nextQuestion.style.display = 'block';
+            } else {
+                nextQuestion.style.display = 'block';
+            }
         } else {
             // All questions displayed, you can handle the end of the questions here
             console.log('All questions answered');
+
+            // Optionally, you can redirect or perform any other action after all questions are answered.
         }
     }
 

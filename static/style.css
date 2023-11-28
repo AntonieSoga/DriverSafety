@@ -246,3 +246,34 @@ body {
 .modal-content button:hover {
     background-color: #1a1a1a;
 }
+
+@media only screen and (max-width: 900px) {
+    .center-down{
+        font-size: 35px;
+        margin: 0 5px;
+    }
+}
+
+@media only screen and (max-width: 600px) {
+
+
+    .center-down{
+        font-size: 20px;
+
+    }
+    .right-div{
+        display: none;
+    }
+    .content-container{
+        display: flex;
+        flex-direction: column;
+        width: 97%;
+        height: 100%;
+    }
+    .left-div,.center-div{
+        width: 100%;
+    }
+    .center-down{
+        margin-bottom: 15px;
+    }
+}

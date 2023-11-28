@@ -48,6 +48,8 @@ function nextFrame() {
     start_alarm();
     // console.log("Alarm Called");
     body.style.background = "#f00";
+
+
   } else {
     stop_alarm();
     body.style.background = "#fff";
