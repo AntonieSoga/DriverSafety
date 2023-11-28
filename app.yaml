@@ -1,0 +1,8 @@
+runtime: python39
+entrypoint: gunicorn -b :$PORT -w 4 app:app  # Adjust the number of workers as needed
+
+beta_settings:
+  cloud_sql_instances: "drivesafe-406507:europe-central2:posgredb"
+
+env_variables:
+  SQLALCHEMY_DATABASE_URI: 'postgresql+psycopg2://posgredb:tpBbIBcvS_J?4%5I@/postgres?host=/cloudsql/drivesafe-406507:europe-central2:posgredb'

@@ -1,35 +1,3 @@
--- Create Qtable
-CREATE TABLE Qtable (
-    IdQ SERIAL PRIMARY KEY,
-    PunctajQ INT
-);
-
--- Create Result table with foreign.sql key reference to Qtable
-CREATE TABLE Result (
-    IdR SERIAL PRIMARY KEY,
-    IdQ INT REFERENCES Qtable(IdQ),
-    Rezultat VARCHAR(255),
-    Latency BOOLEAN
-);
-
--- Create Survey table with foreign.sql key reference to Result
-CREATE TABLE Survey (
-    IdS SERIAL PRIMARY KEY,
-    IdR INT REFERENCES Result(IdR),
-    Obosit BOOLEAN
-);
-
-
-
-
-ALTER TABLE Qtable
-ADD COLUMN Intrebare VARCHAR(250);
-
-
-
-
-
-
 INSERT INTO Qtable (idq, punctajq, intrebare)
 VALUES
     (1, 3, 'Ai avut parte de situații tensionate în cadrul relațiilor tale personale recent?'),
@@ -86,19 +54,3 @@ VALUES
 	(43, 3, 'Ai avut parte de momente de satisfacție și recompensă în urma eforturilor depuse în activitățile tale?'),
 	(44, 4, 'Ai simțit că ai avut prea multe cerințe de gestionat într-un interval de timp scurt?'),
 	(45, 2, 'Ai observat schimbări în nivelul de activitate socială în ultima perioadă?');
-
-SELECT * FROM public.qtable
-ORDER BY idq ASC
-
-
--- Add foreign.sql key to Result table referencing Qtable
-ALTER TABLE Result
-ADD CONSTRAINT fk_result_qtable
-FOREIGN KEY (IdQ) REFERENCES Qtable(IdQ);
-
--- Add foreign.sql key to Survey table referencing Result
-ALTER TABLE Survey
-ADD CONSTRAINT fk_survey_result
-FOREIGN KEY (IdR) REFERENCES Result(IdR);
-
-
